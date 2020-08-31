@@ -1,0 +1,36 @@
+@import 'variables';
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: Gilroy, Helvetica, sans-serif;
+  font-size: 14px;
+  font-weight: 100;
+  box-sizing: border-box;
+  height: 100vh;
+  margin: 0;
+  padding: 50px;
+  transition: background-color .3s ease-in-out;
+  background-color: $white;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: $darkBlue;
+  }
+}
+
+.wrapper {
+  display: flex;
+}
+
+figure {
+  margin: 10px;
+  text-align: center;
+
+  figcaption {
+    padding: 7px 5px;
+    font-style: italic;
+    color: $greyLight;
+  }
+}
