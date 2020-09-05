@@ -11,12 +11,12 @@ body {
   box-sizing: border-box;
   height: 100vh;
   margin: 0;
-  padding: 50px;
   transition: background-color .3s ease-in-out;
-  background-color: $white;
+  background-color: var(--white);
 
   @media (prefers-color-scheme: dark) {
-    background-color: $darkBlue;
+    // background-color: var(--darkBlue);
+    background-color: var(--chartBg);
   }
 }
 
@@ -25,12 +25,36 @@ body {
 }
 
 figure {
-  margin: 10px;
+  margin: auto;
+  padding: 0;
   text-align: center;
 
   figcaption {
     padding: 7px 5px;
     font-style: italic;
-    color: $greyLight;
+    color: var(--greyLight);
+  }
+}
+
+svg#chart {
+  width: 100vw;
+  height: 100vh;
+  background: var(--chartBg);
+
+  path {
+    opacity: 1;
+    stroke-width: 0;
+    stroke: #fff;
+    fill: none;
+    stroke-linecap: round;
+
+    &.cash {
+      &_line { stroke-width: 2; }
+
+      &_fill {
+        fill: url('#grad');
+        mix-blend-mode: overlay;
+      }
+    }
   }
 }

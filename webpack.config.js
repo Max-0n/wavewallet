@@ -48,7 +48,7 @@ const config = {
           {
             loader: "tslint-loader",
             options: {
-              emitErrors: true,
+              emitErrors: false,
               fix: true,
             }
           }

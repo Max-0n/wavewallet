@@ -1,3 +1,11 @@
-$white: #fff;
-$darkBlue: #1e2f40;
-$greyLight: #999;
+:root {
+  --greyLight: #999;
+  --white: #fff;
+  --darkBlue: #1e2f40;
+  --chartBg: #5c1cf2;
+
+  // --chartFillFrom: rgba(87, 239, 255, 1);
+  // --chartFillTo: rgba(144, 244, 255, 0);
+  --chartFillFrom: rgba(255, 255, 255, .7);
+  --chartFillTo: rgba(255, 255, 255, 0);
+}

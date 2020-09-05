@@ -23,7 +23,7 @@ rules:
       max-depth: 4
 
   no-color-keywords: 2
-  no-color-literals: 2
+  no-color-literals: 0
   no-debug: 2
   no-duplicate-properties: 2
   no-empty-rulesets: 2

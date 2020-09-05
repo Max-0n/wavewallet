@@ -1,59 +1,12 @@
-mixin build-with-love()
-  figure
-    img(src=require("./images/built-with-love.svg").default,  alt="Build with love")
-    figcaption Build with love
-
-mixin made-with-pug()
-  figure
-    img(src=require("./images/made-with-pug.svg").default,  alt="Made with pug")
-    figcaption Made with pug
-
-mixin made-with-javascript()
-  figure
-    img(src=require("./images/made-with-javascript.svg").default,  alt="Made with javascript")
-    figcaption Made with javascript
-
-mixin gluten-free()
-  figure
-    img(src=require("./images/gluten-free.svg").default,  alt="Gluten free")
-    figcaption Gluten free
-
-mixin makes-people-smile()
-  figure
-    img(src=require("./images/makes-people-smile.svg").default,  alt="Makes people smile")
-    figcaption Makes people smile
-
-mixin contains-cat-gifs()
-  figure
-    img(src=require("./images/contains-cat-gifs.svg").default,  alt="Contains cat gifs")
-    figcaption Contains cat gifs
-
-mixin uses-badges()
-  figure
-    img(src=require("./images/uses-badges.svg").default,  alt="Uses badges")
-    figcaption Uses badges
-
-mixin uses-css()
-  figure
-    img(src=require("./images/uses-css.svg").default,  alt="Uses CSS")
-    figcaption Uses CSS
-
-mixin uses-html()
-  figure
-    img(src=require("./images/uses-html.svg").default,  alt="Uses HTML")
-    figcaption Uses html
-
-mixin uses-js()
-  figure
-    img(src=require("./images/uses-js.svg").default,  alt="Uses JS")
-    figcaption Uses JS
-
-mixin validated-html5()
-  figure
-    img(src=require("./images/validated-html5.svg").default,  alt="Validated HTML5")
-    figcaption Validated HTML5
-
-mixin you-didnt-ask-for-this()
-  figure
-    img(src=require("./images/you-didnt-ask-for-this.svg").default,  alt="You didn't ask for this")
-    figcaption You didn't ask for this
+mixin chart()
+  svg#chart(viewBox="-300 -300 600 600")
+    linearGradient#grad(x1="50%" y1="0%" x2="50%" y2="100%")
+      stop(offset="0%", stop-color="var(--chartFillFrom)")
+      stop(offset="100%", stop-color="var(--chartFillTo)")
+    g#chartGroup
+      path.cash_fill(fill="url(#grad)", d="M 0,0 C 100,0 100,-200 200,-200 L 200,0 Z")
+      //- path.cash_line(d="M 0,0 C 100,0 100,-200 200,-200")
+      path.cash_line(d="M -100,100 C -50,100 -50,0 0,0 C 100,0 100,-200 200,-200")
+      //- path(d="M 0,0 C 100,0 100,-200 200,-200")
+      //- path(d="M 0,0 C 100,0 100,-200 200,-200")
+      //- path(d="M 200,-200 C 250,-200 250,-250 300,-300")
