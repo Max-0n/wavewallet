@@ -47,14 +47,22 @@ svg#chart {
     stroke: #fff;
     fill: none;
     stroke-linecap: round;
+    transition: opacity .3s ease-in-out;
 
     &.cash {
+
       &_line { stroke-width: 2; }
 
-      &_fill {
-        fill: url('#grad');
+      &_top,
+      &_bottom {
+        // fill: #fff;
+        fill: url('#gradientTop');
         mix-blend-mode: overlay;
+        opacity: .7;
+
+        &:hover { opacity: 1; }
       }
+      &_bottom { fill: url('#gradientBottom'); }
     }
   }
 }

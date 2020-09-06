@@ -15,6 +15,8 @@ window.addEventListener('resize', () => {
 });
 
 svgChart.appendChild(chart.curLine);
-// svgGroup.appendChild(chart.curFill);
-// svgGroup.appendChild(chart.predLine);
-// svgGroup.appendChild(chart.predFill);
+// svgChart.appendChild(chart.curFill);
+// svgChart.appendChild(chart.predLine);
+// svgChart.appendChild(chart.predFill);
+svgChart.appendChild(chart.areaTop);
+svgChart.appendChild(chart.areaBottom);
