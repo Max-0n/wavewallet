@@ -56,13 +56,31 @@ svg#chart {
       &_top,
       &_bottom {
         // fill: #fff;
+        cursor: pointer;
         fill: url('#gradientTop');
-        mix-blend-mode: overlay;
-        opacity: .7;
+        // mix-blend-mode: overlay;
+        opacity: 0;
 
-        &:hover { opacity: 1; }
+        &:hover { opacity: .8; }
       }
-      &_bottom { fill: url('#gradientBottom'); }
+
+      &_bottom {
+        // opacity: .6;
+        mix-blend-mode: normal;
+        fill: url('#gradientBottom');
+      }
     }
   }
+}
+
+.popup {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  // display: flex;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  background: linear-gradient(180deg, var(--chartBottomFillFrom) 0%, var(--chartBottomFillTo) 100%);
+  // backdrop-filter: blur(10px) saturate(2) brightness(1.2);
 }

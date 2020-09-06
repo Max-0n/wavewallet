@@ -33,6 +33,9 @@ export default class WaveChart {
     this.min = Math.min(...values);
     this.max = Math.max(...values);
 
+    this.areaTop.addEventListener('click', e => console.info(e.type, '⬆️', e));
+    this.areaBottom.addEventListener('click', e => console.info(e.type, '⬇️', e));
+
     this.setUp();
     this.drawPaths();
   }
@@ -41,13 +44,11 @@ export default class WaveChart {
     this.workarea = Math.trunc(this.svg.clientHeight - this.svg.clientHeight * 0.2);
     this.stepXSize = Math.round(this.svg.clientWidth / (this.values.length - 1) * 100) / 100;
     this.stepYSize = (this.svg.clientHeight - (this.svg.clientHeight * 0.1)) / 100;
-    // console.log(this.svg.clientWidth, this.values.length, this.stepXSize);
-    // console.log(this.svg.clientHeight, this.min, this.stepYSize, this.max - this.min);
 
     this.points = new Set(this.values.map((value: number, i: number, arr: number[]) => {
       return {
         x: Math.trunc(i * this.stepXSize),
-        y: Math.trunc(((value * 100) / (this.max - this.min)) * this.stepYSize + (this.svg.clientHeight * 0.05)),
+        y: Math.trunc((((value - this.min) / (this.max - this.min)) * 100) * this.stepYSize) + (this.svg.clientHeight * 0.05),
         value,
         fromX: Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
         toX: arr.length === ++i ? null : Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
@@ -56,7 +57,6 @@ export default class WaveChart {
     }));
   }
 
-  // path.cash_line(d="M -100,100 C -50,100 -50,0 0,0 C 100,0 100,-200 200,-200")
   private drawPaths(): void {
     let pathCurLine: string;
     // let pathCurFill: string;
@@ -89,9 +89,6 @@ export default class WaveChart {
     this.areaBottom.classList.add('cash_bottom');
     this.areaBottom.setAttribute('fill', 'url(#gradientBottom)');
     this.areaBottom.setAttribute('d', `${pathCurLine} V ${this.svg.clientHeight} H 0 Z`);
-
-    this.areaTop.addEventListener('click', e => console.info(e.type, '⬆️', e));
-    this.areaBottom.addEventListener('click', e => console.info(e.type, '⬇️', e));
   }
 
   private addPointToPath(point: Point, path: string): string {

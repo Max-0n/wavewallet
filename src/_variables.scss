@@ -2,12 +2,22 @@
   --greyLight: #999;
   --white: #fff;
   --darkBlue: #1e2f40;
-  --chartBg: #5c1cf2;
+  --chartBg: linear-gradient(180deg, #65b4ff 0%, #4acbb4 100%);
+
 
   // --chartFillFrom: rgba(87, 239, 255, 1);
   // --chartFillTo: rgba(144, 244, 255, 0);
   // --chartFillFrom: rgba(255, 255, 255, .7);
   // --chartFillTo: rgba(255, 255, 255, 0);
-  --chartFillFrom: rgba(255, 255, 255, 1);
-  --chartFillTo: rgba(255, 255, 255, .5);
+  // --chartTopFillFrom: #61abf2;
+  // --chartTopFillTo: hsl(163,89%,52%);
+  //
+  // --chartBottomFillFrom: rgb(255,107,0);
+  // --chartBottomFillTo: rgb(255,222,0);
+
+  --chartTopFillFrom: #61f2a4;
+  --chartTopFillTo: #18f2b4;
+
+  --chartBottomFillFrom: #fa944b;
+  --chartBottomFillTo: #eedc5f;
 }
