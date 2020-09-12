@@ -22,6 +22,7 @@ body {
 
 .wrapper {
   display: flex;
+  align-items: flex-start;
 }
 
 figure {
@@ -37,8 +38,10 @@ figure {
 }
 
 svg#chart {
+  margin: 0;
   width: 100vw;
   height: 100vh;
+  // max-height: 400px;
   background: var(--chartBg);
 
   path {
@@ -47,7 +50,7 @@ svg#chart {
     stroke: #fff;
     fill: none;
     stroke-linecap: round;
-    transition: opacity .3s ease-in-out;
+    transition: opacity .3s ease-in-out, d 1s ease-in-out;
 
     &.cash {
 
@@ -61,7 +64,8 @@ svg#chart {
         // mix-blend-mode: overlay;
         opacity: 0;
 
-        &:hover { opacity: .8; }
+        // &:hover { opacity: .8; }
+        &.active { animation: pathGlow 1s 0s 1 normal ease-in-out forwards; }
       }
 
       &_bottom {
@@ -71,6 +75,12 @@ svg#chart {
       }
     }
   }
+}
+
+@keyframes pathGlow {
+	0% { opacity: 0; }
+	15% { opacity: 1; }
+	100% { opacity: 0; }
 }
 
 .popup {

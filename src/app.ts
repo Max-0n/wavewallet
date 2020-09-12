@@ -11,7 +11,7 @@ chart.curLine.classList.add('cash_line');
 
 
 window.addEventListener('resize', () => {
-  chart.redraw();
+  chart.redraw(values.map(val => Math.round(Math.random() * 100)));
 });
 
 // svgChart.appendChild(chart.curFill);

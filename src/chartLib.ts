@@ -13,7 +13,7 @@ export interface Point {
 // [50, 100, 200, 170, 250, 145]
 export default class WaveChart {
   private values: number[];
-  public points: Set<Point>;
+  public points: Set<Point> = new Set();
   public svg: HTMLElement;
   public curLine: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public curFill: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -29,32 +29,39 @@ export default class WaveChart {
 
   constructor(values: number[], svg: HTMLElement) {
     this.svg = svg;
-    this.values = values;
-    this.min = Math.min(...values);
-    this.max = Math.max(...values);
+    this.areaTop.addEventListener('click', this.eventClick);
+    this.areaBottom.addEventListener('click', this.eventClick);
 
-    this.areaTop.addEventListener('click', e => console.info(e.type, '⬆️', e));
-    this.areaBottom.addEventListener('click', e => console.info(e.type, '⬇️', e));
-
-    this.setUp();
+    this.setUp(values);
     this.drawPaths();
   }
 
-  private setUp() {
+  private setUp(values: number[] = this.values) {
+    this.min = Math.min(...values);
+    this.max = Math.max(...values);
+    this.values = values;
     this.workarea = Math.trunc(this.svg.clientHeight - this.svg.clientHeight * 0.2);
     this.stepXSize = Math.round(this.svg.clientWidth / (this.values.length - 1) * 100) / 100;
-    this.stepYSize = (this.svg.clientHeight - (this.svg.clientHeight * 0.1)) / 100;
+    this.stepYSize = (this.svg.clientHeight - (this.svg.clientHeight * 0.5)) / 100;
 
     this.points = new Set(this.values.map((value: number, i: number, arr: number[]) => {
       return {
         x: Math.trunc(i * this.stepXSize),
-        y: Math.trunc((((value - this.min) / (this.max - this.min)) * 100) * this.stepYSize) + (this.svg.clientHeight * 0.05),
+        y: Math.trunc((((value - this.min) / (this.max - this.min)) * 100) * this.stepYSize) + (this.svg.clientHeight * 0.25),
         value,
         fromX: Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
         toX: arr.length === ++i ? null : Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
         isPredict: i > arr.length * 0.75
       } as Point;
     }));
+
+    console.log(Array.from(this.points)[1]);
+  }
+
+  private eventClick(e: MouseEvent): void {
+    const element = e.target as SVGPathElement;
+    element.classList.remove('active');
+    setTimeout(() => { element.classList.add('active'); });
   }
 
   private drawPaths(): void {
@@ -102,9 +109,9 @@ export default class WaveChart {
     return path;
   }
 
-  public redraw(): void {
+  public redraw(values: number[]): void {
     this.svg.setAttribute('viewBox', `0 0 ${this.svg.clientWidth} ${this.svg.clientHeight}`);
-    this.setUp();
+    this.setUp(values);
     this.drawPaths();
   }
 }

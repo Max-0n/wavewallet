@@ -4,6 +4,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SassLintPlugin = require('sass-lint-webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const PugLintPlugin = require('puglint-webpack-plugin');
+const networkInterfaces = require('os').networkInterfaces();
 
 const config = {
   entry: {
@@ -11,13 +12,21 @@ const config = {
   },
   output: {
     filename: "[name].[hash].bundle.js",
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'docs')
   },
   devServer: {
+    host: '0.0.0.0',
     port: 8080,
     overlay: {
       warnings: false,
       errors: true
+    },
+    after: function(app, server, compiler) {
+      // Iterate over interfaces ...
+      for (var dev in networkInterfaces) {
+        const iface = networkInterfaces[dev].filter(details => details.family === 'IPv4' && details.internal === false);
+        if (iface.length > 0) console.log(`LAN access: ${iface[0].address}:${server.options.port}`);
+      }
     }
   },
   resolve: {
