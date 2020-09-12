@@ -6,10 +6,10 @@
 
 ![Validated HTML5](./src/images/validated-html5.svg) ![You didn't ask for this](./src/images/you-didnt-ask-for-this.svg)
 
-# WaveWallet ([Demo](https://nodejs.org/))
+# WaveWallet ([Demo](https://max-0n.github.io/wavewallet/))
 
 ## To work with:
-- Install latest version of [NodeJS](https://max-0n.github.io/wavewallet/)
+- Install latest version of [NodeJS](https://nodejs.org/)
 - Install dependenses ```npm i``` or ```npm install```
 
 ## Run in development mode
