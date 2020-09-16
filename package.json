@@ -1,13 +1,13 @@
 {
   "name": "WaveWallet",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Finance wallet",
   "repository": {
     "type": "git",
     "url": "git@github.com:Max-0n/wavewallet.git"
   },
   "engines": {
-    "node": "14.10.1"
+    "node": "14.11.0"
   },
   "scripts": {
     "start": "webpack-dev-server --mode=development --open",

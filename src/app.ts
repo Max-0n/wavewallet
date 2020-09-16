@@ -20,3 +20,60 @@ window.addEventListener('resize', () => {
 svgChart.appendChild(chart.areaTop);
 svgChart.appendChild(chart.areaBottom);
 svgChart.appendChild(chart.curLine);
+
+
+const consoleDiv = document.getElementById('console');
+const mouse = {
+  startX: 0,
+  startY: 0,
+  curX: 0,
+  curY: 0,
+  hold: false
+};
+
+window.onmousedown = onDragStart;
+window.onmousemove = onDragMove;
+window.onmouseup = onDragEnd;
+
+document.addEventListener('touchstart', onDragStart, false);
+document.addEventListener('touchmove', onDragMove, false);
+document.addEventListener('touchend', onDragEnd, false);
+
+
+function onDragStart(event: MouseEvent | TouchEvent): void {
+  event.preventDefault();
+  mouse.hold = true;
+  const pageX: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageX : (event as MouseEvent).pageX;
+  const pageY: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageY : (event as MouseEvent).pageY;
+  mouse.startX = mouse.curX = pageX;
+  mouse.startY = mouse.curY = pageY;
+
+  showPosition();
+}
+
+function onDragMove(event: MouseEvent | TouchEvent): void {
+  event.preventDefault();
+  if (mouse.hold) {
+    const pageX: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageX : (event as MouseEvent).pageX;
+    const pageY: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageY : (event as MouseEvent).pageY;
+
+    mouse.curX = pageX;
+    mouse.curY = pageY;
+
+    showPosition();
+  }
+}
+
+function onDragEnd(event: MouseEvent | TouchEvent): void {
+  event.preventDefault();
+  mouse.hold = false;
+
+  showPosition.call(this);
+}
+
+function showPosition(): void {
+  console.log(`start: ${mouse.startX}/${mouse.startY}`);
+  console.log(`curre: ${mouse.curX}/${mouse.curY}`);
+  consoleDiv.innerHTML = `${mouse.hold}: ${mouse.startX - mouse.curX}/${mouse.startY - mouse.curY}`;
+  svgChart.setAttribute('viewBox', `${mouse.startX - mouse.curX} ${mouse.startY - mouse.curY} ${svgChart.clientWidth} ${svgChart.clientHeight}`);
+}

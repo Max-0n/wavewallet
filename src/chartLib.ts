@@ -27,6 +27,8 @@ export default class WaveChart {
   private max: number;
   private workarea: number;
 
+  private index = 1;
+
   constructor(values: number[], svg: HTMLElement) {
     this.svg = svg;
     this.areaTop.addEventListener('click', this.eventClick);
@@ -58,10 +60,16 @@ export default class WaveChart {
     console.log(Array.from(this.points)[1]);
   }
 
-  private eventClick(e: MouseEvent): void {
+  private eventClick = (e: MouseEvent): void => {
     const element = e.target as SVGPathElement;
     element.classList.remove('active');
     setTimeout(() => { element.classList.add('active'); });
+
+    // console.log(this.svg);
+    // this.index *= 0.9;
+    // this.svg.setAttribute('viewBox', `${Math.round(this.svg.clientWidth * (1 - this.index))} ${Math.round(this.svg.clientHeight * (1 - this.index))} ${Math.round(this.svg.clientWidth * this.index)} ${Math.round(this.svg.clientHeight * this.index)}`);
+    //
+    // console.log(this.svg.getAttribute('viewBox'));
   }
 
   private drawPaths(): void {

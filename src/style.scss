@@ -1,6 +1,7 @@
 @import 'variables';
 
 body {
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -9,7 +10,8 @@ body {
   font-size: 14px;
   font-weight: 100;
   box-sizing: border-box;
-  height: 100vh;
+  height: 100%;
+  width: 100%;
   margin: 0;
   transition: background-color .3s ease-in-out;
   background-color: var(--white);
@@ -23,6 +25,16 @@ body {
 .wrapper {
   display: flex;
   align-items: flex-start;
+}
+
+#console {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 8px;
+  color: var(--white);
+  background-color: var(--darkBlue);
+  opacity: .5;
 }
 
 figure {
@@ -43,6 +55,7 @@ svg#chart {
   height: 100vh;
   // max-height: 400px;
   background: var(--chartBg);
+  transition: viewBox .3s ease-in-out;
 
   path {
     opacity: 1;
