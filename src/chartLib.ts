@@ -14,7 +14,7 @@ export interface Cursor {
   startX: number;
   startY: number;
   curX: number;
-  curY?: number;
+  curY: number;
   isHold: boolean;
 }
 
