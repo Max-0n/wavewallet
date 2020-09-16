@@ -10,11 +10,18 @@ export interface Point {
   postfix?: string;
 }
 
-// [50, 100, 200, 170, 250, 145]
+export interface Cursor {
+  startX: number;
+  startY: number;
+  curX: number;
+  curY?: number;
+  isHold: boolean;
+}
+
 export default class WaveChart {
   private values: number[];
   public points: Set<Point> = new Set();
-  public svg: HTMLElement;
+  public svgChartElement: HTMLElement;
   public curLine: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public curFill: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public predLine: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -25,31 +32,50 @@ export default class WaveChart {
   public stepYSize: number;
   private min: number;
   private max: number;
-  private workarea: number;
-
-  private index = 1;
+  private cursor: Cursor = {
+    startX: 0,
+    startY: 0,
+    curX: 0,
+    curY: 0,
+    isHold: false
+  };
 
   constructor(values: number[], svg: HTMLElement) {
-    this.svg = svg;
+    this.svgChartElement = svg;
     this.areaTop.addEventListener('click', this.eventClick);
     this.areaBottom.addEventListener('click', this.eventClick);
 
+    this.curLine.classList.add('cash_line');
+
     this.setUp(values);
     this.drawPaths();
+
+    this.svgChartElement.addEventListener('mousedown', this.onDragStart, false);
+    this.svgChartElement.addEventListener('mousemove', this.onDragMove, false);
+    this.svgChartElement.addEventListener('mouseup', this.onDragEnd, false);
+
+    this.svgChartElement.addEventListener('touchstart', this.onDragStart, false);
+    this.svgChartElement.addEventListener('touchmove', this.onDragMove, false);
+    this.svgChartElement.addEventListener('touchend', this.onDragEnd, false);
+
+    window.addEventListener('resize', this.onResize, false);
+
+    this.svgChartElement.appendChild(this.areaTop);
+    this.svgChartElement.appendChild(this.areaBottom);
+    this.svgChartElement.appendChild(this.curLine);
   }
 
   private setUp(values: number[] = this.values) {
     this.min = Math.min(...values);
     this.max = Math.max(...values);
     this.values = values;
-    this.workarea = Math.trunc(this.svg.clientHeight - this.svg.clientHeight * 0.2);
-    this.stepXSize = Math.round(this.svg.clientWidth / (this.values.length - 1) * 100) / 100;
-    this.stepYSize = (this.svg.clientHeight - (this.svg.clientHeight * 0.5)) / 100;
+    this.stepXSize = Math.round(this.svgChartElement.clientWidth / (this.values.length - 1) * 100) / 100;
+    this.stepYSize = (this.svgChartElement.clientHeight - (this.svgChartElement.clientHeight * 0.5)) / 100;
 
     this.points = new Set(this.values.map((value: number, i: number, arr: number[]) => {
       return {
         x: Math.trunc(i * this.stepXSize),
-        y: Math.trunc((((value - this.min) / (this.max - this.min)) * 100) * this.stepYSize) + (this.svg.clientHeight * 0.25),
+        y: Math.trunc((((value - this.min) / (this.max - this.min)) * 100) * this.stepYSize) + (this.svgChartElement.clientHeight * 0.25),
         value,
         fromX: Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
         toX: arr.length === ++i ? null : Math.trunc(i * this.stepXSize - (this.stepXSize / 2)),
@@ -57,7 +83,7 @@ export default class WaveChart {
       } as Point;
     }));
 
-    console.log(Array.from(this.points)[1]);
+    // console.log(Array.from(this.points)[1]);
   }
 
   private eventClick = (e: MouseEvent): void => {
@@ -103,7 +129,7 @@ export default class WaveChart {
 
     this.areaBottom.classList.add('cash_bottom');
     this.areaBottom.setAttribute('fill', 'url(#gradientBottom)');
-    this.areaBottom.setAttribute('d', `${pathCurLine} V ${this.svg.clientHeight} H 0 Z`);
+    this.areaBottom.setAttribute('d', `${pathCurLine} V ${this.svgChartElement.clientHeight} H 0 Z`);
   }
 
   private addPointToPath(point: Point, path: string): string {
@@ -117,9 +143,38 @@ export default class WaveChart {
     return path;
   }
 
-  public redraw(values: number[]): void {
-    this.svg.setAttribute('viewBox', `0 0 ${this.svg.clientWidth} ${this.svg.clientHeight}`);
-    this.setUp(values);
+  private onResize = (): void => {
+    this.svgChartElement.setAttribute('viewBox', `0 0 ${this.svgChartElement.clientWidth} ${this.svgChartElement.clientHeight}`);
+    this.values = this.values.map(() => Math.round(Math.random() * 100));
+    this.setUp(this.values);
     this.drawPaths();
+  }
+
+  private onDragStart = (event: MouseEvent | TouchEvent): void => {
+    event.preventDefault();
+    this.cursor.isHold = true;
+    const pageX: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageX : (event as MouseEvent).pageX;
+    const pageY: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageY : (event as MouseEvent).pageY;
+    this.cursor.startX = this.cursor.curX = pageX;
+    this.cursor.startY = this.cursor.curY = pageY;
+  }
+
+  private onDragMove = (event: MouseEvent | TouchEvent): void => {
+    event.preventDefault();
+    if (this.cursor.isHold) {
+      const pageX: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageX : (event as MouseEvent).pageX;
+      const pageY: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageY : (event as MouseEvent).pageY;
+
+      this.cursor.curX = pageX;
+      this.cursor.curY = pageY;
+
+      document.getElementById('console').innerHTML = `${this.cursor.isHold}: ${this.cursor.startX - this.cursor.curX}/${this.cursor.startY - this.cursor.curY}`;
+      this.svgChartElement.setAttribute('viewBox', `${this.cursor.startX - this.cursor.curX} ${this.cursor.startY - this.cursor.curY} ${this.svgChartElement.clientWidth} ${this.svgChartElement.clientHeight}`);
+    }
+  }
+
+  private onDragEnd = (event: MouseEvent | TouchEvent): void => {
+    event.preventDefault();
+    this.cursor.isHold = false;
   }
 }
