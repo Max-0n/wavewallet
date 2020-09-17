@@ -1,7 +1,7 @@
 @import 'variables';
 
 body {
-  position: fixed;
+  // position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -14,12 +14,8 @@ body {
   width: 100%;
   margin: 0;
   transition: background-color .3s ease-in-out;
-  background-color: var(--white);
-
-  @media (prefers-color-scheme: dark) {
-    // background-color: var(--darkBlue);
-    background-color: var(--chartBg);
-  }
+  // background: var(--chartBg);
+  background: #65b4ff;
 }
 
 .wrapper {
@@ -54,7 +50,7 @@ svg#chart {
   width: 100vw;
   height: 100vh;
   // max-height: 400px;
-  background: var(--chartBg);
+  // background: var(--chartBg);
   transition: viewBox .3s ease-in-out;
 
   path {

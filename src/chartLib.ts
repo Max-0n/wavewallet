@@ -39,6 +39,7 @@ export default class WaveChart {
     curY: 0,
     isHold: false
   };
+  private stepIndex: number = 0;
 
   constructor(values: number[], svg: HTMLElement) {
     this.svgChartElement = svg;
@@ -165,11 +166,44 @@ export default class WaveChart {
       const pageX: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageX : (event as MouseEvent).pageX;
       const pageY: number = (event as TouchEvent).touches ? (event as TouchEvent).touches[0].pageY : (event as MouseEvent).pageY;
 
+
+      // console.log(this.cursor.curX, pageX);
+
       this.cursor.curX = pageX;
       this.cursor.curY = pageY;
 
-      document.getElementById('console').innerHTML = `${this.cursor.isHold}: ${this.cursor.startX - this.cursor.curX}/${this.cursor.startY - this.cursor.curY}`;
-      this.svgChartElement.setAttribute('viewBox', `${this.cursor.startX - this.cursor.curX} ${this.cursor.startY - this.cursor.curY} ${this.svgChartElement.clientWidth} ${this.svgChartElement.clientHeight}`);
+
+      // if (this.cursor.startX - this.cursor.curX <= 90) {
+      //   this.cursor.startX += 100;
+      //   // this.cursor.curX += 100;
+      // } else if (this.cursor.startX - this.cursor.curX >= -90) {
+      //   this.cursor.startX -= 100;
+      //   // this.cursor.curX += 100;
+      // }
+
+      // console.log(
+      //   this.cursor.startX - this.cursor.curX,
+      //   (this.cursor.startX - this.cursor.curX) % 100
+      // );
+
+      if (this.cursor.startX - this.cursor.curX >= 90) {
+        new Audio(require('./sounds/swipeStepSound.mp3').default).play();
+        this.cursor.startX -= 100;
+        this.cursor.curX -= 100;
+        this.stepIndex--;
+        console.log(this.cursor.startX - this.cursor.curX);
+      } else if (this.cursor.startX - this.cursor.curX <= -90) {
+        new Audio(require('./sounds/swipeStepSound.mp3').default).play();
+        this.cursor.startX += 100;
+        this.cursor.curX += 100;
+        this.stepIndex++;
+        console.log(this.cursor.startX - this.cursor.curX);
+      }
+
+      document.getElementById('console').innerHTML = `
+      ${this.cursor.isHold}:
+      ${this.cursor.startX - this.cursor.curX} (${this.cursor.startX},${this.cursor.curX})`;
+      this.svgChartElement.setAttribute('viewBox', `${((this.cursor.startX - this.cursor.curX) * .5) - this.stepIndex * 100} ${this.cursor.startY - this.cursor.curY} ${this.svgChartElement.clientWidth} ${this.svgChartElement.clientHeight}`);
     }
   }
 
