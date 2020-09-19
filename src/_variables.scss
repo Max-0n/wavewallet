@@ -17,6 +17,9 @@
   --chartTopFillFrom: #61f2a4;
   --chartTopFillTo: #18f2b4;
 
-  --chartBottomFillFrom: #fa944b;
-  --chartBottomFillTo: #eedc5f;
+  --chartBottomFillFrom: var(--white);
+  --chartBottomFillTo: var(--white);
+
+  --pointStroke: var(--white);
+  --pointFill: rgba(255, 255, 255, .3);
 }

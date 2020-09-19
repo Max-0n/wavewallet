@@ -56,7 +56,7 @@ svg#chart {
   path {
     opacity: 1;
     stroke-width: 0;
-    stroke: #fff;
+    stroke: var(--white);
     fill: none;
     stroke-linecap: round;
     transition: opacity .3s ease-in-out, d 1s ease-in-out;
@@ -69,12 +69,12 @@ svg#chart {
       &_bottom {
         // fill: #fff;
         cursor: pointer;
-        fill: url('#gradientTop');
+        // fill: url('#gradientTop');
         // mix-blend-mode: overlay;
-        opacity: 0;
+        // opacity: 1;
 
         // &:hover { opacity: .8; }
-        &.active { animation: pathGlow 1s 0s 1 normal ease-in-out forwards; }
+        // &.active { animation: pathGlow 1s 0s 1 normal ease-in-out forwards; }
       }
 
       &_bottom {
@@ -84,13 +84,35 @@ svg#chart {
       }
     }
   }
+
+  circle {
+    stroke-linecap: round;
+    stroke-width: 2px;
+    stroke: var(--pointStroke);
+    fill: var(--pointFill);
+    opacity: .2;
+
+    &.active,
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  // ellipse
+  // ry="64"
+  // rx="64"
+  // cy="105"
+  // cx="135"
+  // stroke-width="1.5"
+  // stroke="#ff0000"
+  // fill="#13dddd"
 }
 
-@keyframes pathGlow {
-	0% { opacity: 0; }
-	15% { opacity: 1; }
-	100% { opacity: 0; }
-}
+// @keyframes pathGlow {
+// 	0% { opacity: 0; }
+// 	15% { opacity: 1; }
+// 	100% { opacity: 0; }
+// }
 
 .popup {
   position: fixed;
