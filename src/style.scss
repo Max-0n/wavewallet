@@ -33,6 +33,16 @@ body {
   opacity: .5;
 }
 
+#devMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 8px;
+  color: var(--white);
+  background-color: var(--darkBlue);
+  opacity: .5;
+}
+
 figure {
   margin: auto;
   padding: 0;

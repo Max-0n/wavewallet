@@ -32,7 +32,7 @@
       "encoding": true,
       "increment-decrement": false,
       "file-name-casing": [true, "camel-case"],
-      "newline-per-chained-call": true,
+      "newline-per-chained-call": false,
       "no-unnecessary-callback-wrapper": true,
       "object-literal-key-quotes": [true, "as-needed"],
       "one-variable-per-declaration": true,

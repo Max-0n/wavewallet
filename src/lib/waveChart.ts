@@ -1,30 +1,10 @@
-export interface Point {
-  x: number;
-  y: number;
-  radius: number;
-  view: SVGCircleElement;
-  isPredict?: boolean;
-  fromX?: number;
-  fromY?: number;
-  toX?: number;
-  toY?: number;
-  value?: number;
-  postfix?: string;
-  activate?: Function;
-  deactivate?: Function;
-}
-
-export interface Cursor {
-  startX: number;
-  startY: number;
-  curX: number;
-  curY: number;
-  isHold: boolean;
-}
+import { Point } from './interfaces';
+import Cursor from './cursor';
 
 export default class WaveChart {
   private values: number[];
   public points: Map<number, Point> = new Map();
+  private pointsArray: Point[];
   public svgChartElement: HTMLElement;
   public curLine: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public curFill: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -32,17 +12,11 @@ export default class WaveChart {
   public predFill: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public areaTop: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   public areaBottom: SVGPathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-  public stepXSize: number;
+  public stepXSize: number = 100;
   public stepYSize: number;
   private min: number;
   private max: number;
-  private cursor: Cursor = {
-    startX: 0,
-    startY: 0,
-    curX: 0,
-    curY: 0,
-    isHold: false
-  };
+  private cursor: Cursor = new Cursor();
   private viewIndex: number = 0;
 
   constructor(values: number[], svg: HTMLElement) {
@@ -64,18 +38,30 @@ export default class WaveChart {
     this.svgChartElement.addEventListener('touchend', this.onDragEnd, false);
 
     window.addEventListener('resize', this.onResize, false);
+
+    // document.getElementById('btnIndexPlus')
+    //   .addEventListener('click', () => {
+    //     this.viewIndex++;
+    //     console.log(this.viewIndex);
+    //   }, false);
+
+    // document.getElementById('btnIndexMinus')
+    //   .addEventListener('click', () => {
+    //     this.viewIndex--;
+    //     console.log(this.viewIndex);
+    //   }, false);
   }
 
   private setUp(values: number[] = this.values) {
     this.min = Math.min(...values);
     this.max = Math.max(...values);
     this.values = values;
-    this.stepXSize = Math.round(this.svgChartElement.clientWidth / (this.values.length - 1) * 100) / 100;
+    // this.stepXSize = Math.round(this.svgChartElement.clientWidth / (this.values.length - 1) * 100) / 100;
     this.stepYSize = (this.svgChartElement.clientHeight - (this.svgChartElement.clientHeight * 0.5)) / 100;
 
     this.makePoints();
 
-    console.log(Array.from(this.points));
+    // console.log(Array.from(this.points));
   }
 
   // private eventClick = (e: MouseEvent): void => {
@@ -144,7 +130,6 @@ export default class WaveChart {
         y,
         radius,
         value,
-        // activate() { console.log(this); },
         activate() {
           this.view.setAttribute('r', `${this.radius * 2}`);
           this.view.classList.add('active');
@@ -164,6 +149,8 @@ export default class WaveChart {
       this.points.set(index, point);
     });
 
+    this.pointsArray = points;
+
     console.info(this.points);
   }
 
@@ -179,10 +166,19 @@ export default class WaveChart {
     return view;
   }
 
+  private getCenterOfChart(): Point {
+    return { x: Math.trunc(this.svgChartElement.clientWidth / 2), y: Math.trunc(this.svgChartElement.clientHeight / 2) };
+  }
+
+  private getVectorLength(from: Point, to: Point): number {
+    const deltaX: number = to.x - from.x;
+    const deltaY: number = to.y - from.y;
+    return Math.round(Math.sqrt(deltaX ** 2 + deltaX ** 2));
+  }
+
   private onResize = (): void => {
     this.svgChartElement.setAttribute('viewBox', `0 0 ${this.svgChartElement.clientWidth} ${this.svgChartElement.clientHeight}`);
-    this.values = this.values.map(() => Math.round(Math.random() * 100));
-    this.setUp(this.values);
+    this.setUp();
     this.makeChart();
   }
 
@@ -205,22 +201,42 @@ export default class WaveChart {
       this.cursor.curX = pageX;
       this.cursor.curY = pageY;
 
-      if (this.cursor.startX - this.cursor.curX >= 90) {
-        new Audio(require('./sounds/swipeStepSound.mp3').default).play();
-        this.cursor.startX -= 100;
-        this.viewIndex--;
-        console.log(this.points.get(this.viewIndex));
-        this.points.get(this.points.size - this.viewIndex).activate();
-        this.points.get(this.points.size - this.viewIndex + 1).deactivate();
-      } else if (this.cursor.startX - this.cursor.curX <= -90) {
-        new Audio(require('./sounds/swipeStepSound.mp3').default).play();
-        this.cursor.startX += 100;
-        this.viewIndex++;
-        this.points.get(this.points.size / 2 - this.viewIndex).activate();
-        this.points.get(this.points.size / 2 - this.viewIndex - 1).deactivate();
-      }
+      const centerX: number = (this.svgChartElement.clientWidth / 2) - this.cursor.startX - this.cursor.curX;
+      const centerY: number = (this.svgChartElement.clientHeight / 2) - this.cursor.startY - this.cursor.curY;
 
-      console.log(this.viewIndex);
+      // let str = '';
+      // this.pointsArray.forEach((point: Point) => {
+      //     str += ' ' + this.getVectorLength(point, { x: centerX, y: centerY });
+      //     // str += ` ${this.pointsArray[i - 1].x},${this.pointsArray[i - 1].y} ${point.x},${point.y} ____`;
+      // });
+      // console.log(str);
+
+      console.log(this.pointsArray[0].view, `${this.pointsArray[0].x},${this.pointsArray[0].y}`);
+
+      // if (this.cursor.startX - this.cursor.curX >= 90) {
+      //   new Audio(require('../sounds/swipeStepSound.mp3').default).play();
+      //   // this.cursor.startX -= 100;
+      //   // this.viewIndex--;
+      //   // console.log(this.points.get(this.viewIndex));
+      //   this.points
+      //     .get(this.points.size - this.viewIndex)
+      //     .activate();
+      //   this.points
+      //     .get(this.points.size - this.viewIndex + 1)
+      //     .deactivate();
+      // } else if (this.cursor.startX - this.cursor.curX <= -90) {
+      //   new Audio(require('../sounds/swipeStepSound.mp3').default).play();
+      //   // this.cursor.startX += 100;
+      //   // this.viewIndex++;
+      //   this.points
+      //     .get(this.points.size / 2 - this.viewIndex)
+      //     .activate();
+      //   this.points
+      //     .get(this.points.size / 2 - this.viewIndex - 1)
+      //     .deactivate();
+      // }
+
+      // console.log(this.viewIndex);
 
       document.getElementById('console').innerHTML = `
       ${this.cursor.isHold}
@@ -236,4 +252,5 @@ export default class WaveChart {
     event.preventDefault();
     this.cursor.isHold = false;
   }
+
 }
